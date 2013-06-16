@@ -1,0 +1,50 @@
+<apex:page controller="ASummaryController">
+    
+    <apex:pageBlock title="Component Size">
+        <apex:pageBlockSection columns="2">
+            <apex:chart data="{!countDataList}" height="300" width="500">
+                <apex:axis type="Category" position="left" fields="name" title="Component"/>
+                <apex:axis type="Numeric" position="bottom" fields="countLengh" title="Number of components" minimum="0" />
+                <apex:barSeries orientation="horizontal" axis="bottom" xField="countLengh" yField="name"/>
+            </apex:chart>
+
+            <apex:chart data="{!lengthDataList}" height="300" width="500">
+                <apex:axis type="Category" position="left" fields="name" title="Component"/>
+                <apex:axis type="Numeric" position="bottom" fields="countLengh" title="Length Without Comments" minimum="0" />
+                <apex:barSeries orientation="horizontal" axis="bottom" xField="countLengh" yField="name"/>
+            </apex:chart>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+
+    <apex:panelGrid columns="2">
+        <apex:pageBlock title="Class">
+            <apex:chart data="{!apiVersionClassList}" height="400" width="500" background="#F5F5F5">
+                <apex:legend position="left"/>
+                <apex:pieSeries labelField="apiVersion" dataField="count" donut="10" />
+            </apex:chart>
+        </apex:pageBlock>
+        
+        <apex:pageBlock title="Trigger">
+            <apex:chart data="{!apiVersionTriggerList}" height="400" width="500" background="#F5F5F5">
+                <apex:legend position="left"/>
+                <apex:pieSeries labelField="apiVersion" dataField="count" donut="10" />
+            </apex:chart>
+        </apex:pageBlock>
+        
+        <apex:pageBlock title="Page">
+            <apex:chart data="{!apiVersionPageList}" height="400" width="500" background="#F5F5F5">
+                <apex:legend position="left"/>
+                <apex:pieSeries labelField="apiVersion" dataField="count" donut="10" />
+            </apex:chart>
+        </apex:pageBlock>
+        
+        <apex:pageBlock title="Component">
+            <apex:chart data="{!apiVersionComponentList}" height="400" width="500" background="#F5F5F5">
+                <apex:legend position="left"/>
+                <apex:pieSeries labelField="apiVersion" dataField="count" donut="10"/>
+            </apex:chart>
+        </apex:pageBlock>
+
+    </apex:panelGrid>
+    
+</apex:page>

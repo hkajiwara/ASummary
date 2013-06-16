@@ -1,0 +1,14 @@
+<project name="Sample usage of Salesforce Ant tasks" default="deploy_check" basedir="." xmlns:sf="antlib:com.salesforce">
+	<property file="build.properties" />
+	<property environment="env" />
+	
+	<target name="retrieve">
+		<sf:retrieve username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" retrieveTarget="./src" unpackaged="./src/package.xml" />
+		<echo message="retrieving from ${sf.username}"/>
+	</target>
+
+	<target name="deploy" >
+		<sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" runAllTests="false" deployRoot="./src" maxPoll="200" />
+	</target>
+
+</project>

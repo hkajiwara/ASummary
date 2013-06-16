@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>ASummaryConfig</members>
+        <members>ASummaryController</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>ASummaryPage</members>
+        <name>ApexPage</name>
+    </types>
+    <types>
+        <members>ASummary</members>
+        <name>CustomTab</name>
+    </types>
+    <version>28.0</version>
+</Package>
