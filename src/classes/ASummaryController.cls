@@ -10,6 +10,16 @@ public with sharing class ASummaryController {
 	public List<ApexPage> pageList {get; set;}
 	public List<ApexComponent> componentList {get; set;}
 	
+	public List<ApexClass> classCreatedList {get; set;}
+	public List<ApexTrigger> triggerCreatedList {get; set;}
+	public List<ApexPage> pageCreatedList {get; set;}
+	public List<ApexComponent> componentCreatedList {get; set;}
+	
+	public List<ApexClass> classModifiedList {get; set;}
+	public List<ApexTrigger> triggerModifiedList {get; set;}
+	public List<ApexPage> pageModifiedList {get; set;}
+	public List<ApexComponent> componentModifiedList {get; set;}
+	
 	/**
 	 * Graph data
 	 */
@@ -44,6 +54,20 @@ public with sharing class ASummaryController {
 			triggerList = Database.query(ASummaryConfig.APEX_TRIGGER_QUERY);
 			pageList = Database.query(ASummaryConfig.APEX_PAGE_QUERY);
 			componentList = Database.query(ASummaryConfig.APEX_COMPONENT_QUERY);
+			
+			Datetime targeDateTime = Datetime.newInstance(Datetime.now().year() - 1, Datetime.now().month(), Datetime.now().day());
+			String whereClause = ' WHERE CreatedDate > ' + targeDateTime.format('yyyy-MM-dd\'T\'HH:mm:ss.000\'Z\'');
+			
+			classCreatedList = Database.query(ASummaryConfig.APEX_CLASS_CDATE_QUERY + whereClause);
+			triggerCreatedList = Database.query(ASummaryConfig.APEX_TRIGGER_CDATE_QUERY + whereClause);
+			pageCreatedList = Database.query(ASummaryConfig.APEX_PAGE_CDATE_QUERY + whereClause);
+			componentCreatedList = Database.query(ASummaryConfig.APEX_COMPONENT_CDATE_QUERY + whereClause);
+			
+			whereClause = ' WHERE LastModifiedDate > ' + targeDateTime.format('yyyy-MM-dd\'T\'HH:mm:ss.000\'Z\'');
+			classModifiedList = Database.query(ASummaryConfig.APEX_CLASS_MDATE_QUERY + whereClause);
+			triggerModifiedList = Database.query(ASummaryConfig.APEX_TRIGGER_MDATE_QUERY + whereClause);
+			pageModifiedList = Database.query(ASummaryConfig.APEX_PAGE_MDATE_QUERY + whereClause);
+			componentModifiedList = Database.query(ASummaryConfig.APEX_COMPONENT_MDATE_QUERY + whereClause);
 		} catch (QueryException e) {
 			System.debug(e);
 		}
@@ -163,6 +187,7 @@ public with sharing class ASummaryController {
 	public void countCreatedComponent() {
 		createdComponentList = new List<CreatedModifiedDateClass>();
 		
+		Date todayDate = Date.newInstance(Date.today().year(), Date.today().month(), 1);
 		Date targetDate = Date.newInstance(Date.today().year(), Date.today().month() + 1, 1);
 		CreatedModifiedDateClass[] component = new CreatedModifiedDateClass[12];
 		for (Integer i = 0 ; i < component.size(); i++) {
@@ -171,58 +196,50 @@ public with sharing class ASummaryController {
 		}
 		
 		// Apex
-		for(ApexClass target : classList) {
-			targetDate = Date.newInstance(Date.today().year(), Date.today().month() + 1, 1);
+		for(ApexClass target : classCreatedList) {
+			targetDate = todayDate.addMonths(1);
 			for (Integer i = 0; i < component.size(); i++) {
-				if (target.CreatedDate >= Date.newInstance(targetDate.year(), targetDate.month() - 1, 1) &&
-					target.CreatedDate < Date.newInstance(targetDate.year(), targetDate.month(), 1) ) {
-					
-					component[i].addCount('APEX');
+				if (target.CreatedDate >= targetDate.addMonths(-1) && target.CreatedDate < targetDate ) {
+					component[i].addCount(ASummaryConfig.CLASS_SATEMENT);
 					break;
 				}
-				targetDate = Date.newInstance(targetDate.year(), targetDate.month() - 1, 1);
+				targetDate = targetDate.addMonths(-1);
 			}
 		}
 		
 		// Trigger
-		for(ApexTrigger target : triggerList) {
-			targetDate = Date.newInstance(Date.today().year(), Date.today().month() + 1, 1);
+		for(ApexTrigger target : triggerCreatedList) {
+			targetDate = todayDate.addMonths(1);
 			for (Integer i = 0; i < component.size(); i++) {
-				if (target.CreatedDate >= Date.newInstance(targetDate.year(), targetDate.month() - 1, 1) &&
-					target.CreatedDate < Date.newInstance(targetDate.year(), targetDate.month(), 1) ) {
-					
-					component[i].addCount('TRIGGER');
+				if (target.CreatedDate >= targetDate.addMonths(-1) && target.CreatedDate < targetDate ) {
+					component[i].addCount(ASummaryConfig.TRIGGER_SATEMENT);
 					break;
 				}
-				targetDate = Date.newInstance(targetDate.year(), targetDate.month() - 1, 1);
+				targetDate = targetDate.addMonths(-1);
 			}
 		}
 		
 		// Page
-		for(ApexPage target : pageList) {
-			targetDate = Date.newInstance(Date.today().year(), Date.today().month() + 1, 1);
+		for(ApexPage target : pageCreatedList) {
+			targetDate = todayDate.addMonths(1);
 			for (Integer i = 0; i < component.size(); i++) {
-				if (target.CreatedDate >= Date.newInstance(targetDate.year(), targetDate.month() - 1, 1) &&
-					target.CreatedDate < Date.newInstance(targetDate.year(), targetDate.month(), 1) ) {
-					
-					component[i].addCount('PAGE');
+				if (target.CreatedDate >= targetDate.addMonths(-1) && target.CreatedDate < targetDate ) {
+					component[i].addCount(ASummaryConfig.PAGE_SATEMENT);
 					break;
 				}
-				targetDate = Date.newInstance(targetDate.year(), targetDate.month() - 1, 1);
+				targetDate = targetDate.addMonths(-1);
 			}
 		}
 		
 		// Component
-		for(ApexComponent target : componentList) {
-			targetDate = Date.newInstance(Date.today().year(), Date.today().month() + 1, 1);
+		for(ApexComponent target : componentCreatedList) {
+			targetDate = todayDate.addMonths(1);
 			for (Integer i = 0; i < component.size(); i++) {
-				if (target.CreatedDate >= Date.newInstance(targetDate.year(), targetDate.month() - 1, 1) &&
-					target.CreatedDate < Date.newInstance(targetDate.year(), targetDate.month(), 1) ) {
-					
-					component[i].addCount('COMPONENT');
+				if (target.CreatedDate >= targetDate.addMonths(-1) && target.CreatedDate < targetDate ) {
+					component[i].addCount(ASummaryConfig.COMPONENT_SATEMENT);
 					break;
 				}
-				targetDate = Date.newInstance(targetDate.year(), targetDate.month() - 1, 1);
+				targetDate = targetDate.addMonths(-1);
 			}
 		}
 		
@@ -237,6 +254,7 @@ public with sharing class ASummaryController {
 	public void countModifiedComponent() {
 		modifiedComponentList = new List<CreatedModifiedDateClass>();
 		
+		Date todayDate = Date.newInstance(Date.today().year(), Date.today().month(), 1);
 		Date targetDate = Date.newInstance(Date.today().year(), Date.today().month() + 1, 1);
 		CreatedModifiedDateClass[] component = new CreatedModifiedDateClass[12];
 		for (Integer i = 0 ; i < component.size(); i++) {
@@ -245,58 +263,50 @@ public with sharing class ASummaryController {
 		}
 		
 		// Apex
-		for(ApexClass target : classList) {
-			targetDate = Date.newInstance(Date.today().year(), Date.today().month() + 1, 1);
+		for(ApexClass target : classModifiedList) {
+			targetDate = todayDate.addMonths(1);
 			for (Integer i = 0; i < component.size(); i++) {
-				if (target.LastModifiedDate >= Date.newInstance(targetDate.year(), targetDate.month() - 1, 1) &&
-					target.LastModifiedDate < Date.newInstance(targetDate.year(), targetDate.month(), 1) ) {
-					
-					component[i].addCount('APEX');
+				if (target.LastModifiedDate >= targetDate.addMonths(-1) && target.LastModifiedDate < targetDate ) {
+					component[i].addCount(ASummaryConfig.CLASS_SATEMENT);
 					break;
 				}
-				targetDate = Date.newInstance(targetDate.year(), targetDate.month() - 1, 1);
+				targetDate = targetDate.addMonths(-1);
 			}
 		}
 		
 		// Trigger
-		for(ApexTrigger target : triggerList) {
-			targetDate = Date.newInstance(Date.today().year(), Date.today().month() + 1, 1);
+		for(ApexTrigger target : triggerModifiedList) {
+			targetDate = todayDate.addMonths(1);
 			for (Integer i = 0; i < component.size(); i++) {
-				if (target.LastModifiedDate >= Date.newInstance(targetDate.year(), targetDate.month() - 1, 1) &&
-					target.LastModifiedDate < Date.newInstance(targetDate.year(), targetDate.month(), 1) ) {
-					
-					component[i].addCount('TRIGGER');
+				if (target.LastModifiedDate >= targetDate.addMonths(-1) && target.LastModifiedDate < targetDate ) {
+					component[i].addCount(ASummaryConfig.TRIGGER_SATEMENT);
 					break;
 				}
-				targetDate = Date.newInstance(targetDate.year(), targetDate.month() - 1, 1);
+				targetDate = targetDate.addMonths(-1);
 			}
 		}
 		
 		// Page
-		for(ApexPage target : pageList) {
-			targetDate = Date.newInstance(Date.today().year(), Date.today().month() + 1, 1);
+		for(ApexPage target : pageModifiedList) {
+			targetDate = todayDate.addMonths(1);
 			for (Integer i = 0; i < component.size(); i++) {
-				if (target.LastModifiedDate >= Date.newInstance(targetDate.year(), targetDate.month() - 1, 1) &&
-					target.LastModifiedDate < Date.newInstance(targetDate.year(), targetDate.month(), 1) ) {
-					
-					component[i].addCount('PAGE');
+				if (target.LastModifiedDate >= targetDate.addMonths(-1) && target.LastModifiedDate < targetDate ) {
+					component[i].addCount(ASummaryConfig.PAGE_SATEMENT);
 					break;
 				}
-				targetDate = Date.newInstance(targetDate.year(), targetDate.month() - 1, 1);
+				targetDate = targetDate.addMonths(-1);
 			}
 		}
 		
 		// Component
-		for(ApexComponent target : componentList) {
-			targetDate = Date.newInstance(Date.today().year(), Date.today().month() + 1, 1);
+		for(ApexComponent target : componentModifiedList) {
+			targetDate = todayDate.addMonths(1);
 			for (Integer i = 0; i < component.size(); i++) {
-				if (target.LastModifiedDate >= Date.newInstance(targetDate.year(), targetDate.month() - 1, 1) &&
-					target.LastModifiedDate < Date.newInstance(targetDate.year(), targetDate.month(), 1) ) {
-					
-					component[i].addCount('COMPONENT');
+				if (target.LastModifiedDate >= targetDate.addMonths(-1) && target.LastModifiedDate < targetDate ) {
+					component[i].addCount(ASummaryConfig.COMPONENT_SATEMENT);
 					break;
 				}
-				targetDate = Date.newInstance(targetDate.year(), targetDate.month() - 1, 1);
+				targetDate = targetDate.addMonths(-1);
 			}
 		}
 		
@@ -348,13 +358,13 @@ public with sharing class ASummaryController {
 		}
 		
 		private void addCount(String componentType) {
-			if (componentType == 'APEX') {
+			if (componentType == ASummaryConfig.CLASS_SATEMENT) {
 				this.apexCount++;
-			} else if (componentType == 'TRIGGER') {
+			} else if (componentType == ASummaryConfig.TRIGGER_SATEMENT) {
 				this.triggerCount++;
-			} else if (componentType == 'PAGE') {
+			} else if (componentType == ASummaryConfig.PAGE_SATEMENT) {
 				this.pageCount++;
-			} else if (componentType == 'COMPONENT') {
+			} else if (componentType == ASummaryConfig.COMPONENT_SATEMENT) {
 				this.componentCount++;
 			} else {
 			}
