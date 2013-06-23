@@ -3,7 +3,7 @@
     <apex:panelGrid columns="2">
         
         <apex:pageBlock title="NUMBER">
-            <apex:chart data="{!countDataList}" height="200" width="400">
+            <apex:chart data="{!countDataList}" height="200" width="350">
                 <apex:axis type="Category" position="left" fields="name" title="Component"/>
                 <apex:axis type="Numeric" position="bottom" fields="countLengh" title="# of components" minimum="0" />
                 <apex:barSeries orientation="horizontal" axis="bottom" xField="countLengh" yField="name"/>
@@ -11,7 +11,7 @@
         </apex:pageBlock>
 
         <apex:pageBlock title="LENGTH">
-            <apex:chart data="{!lengthDataList}" height="200" width="400">
+            <apex:chart data="{!lengthDataList}" height="200" width="350">
                 <apex:axis type="Category" position="left" fields="name" title="Component"/>
                 <apex:axis type="Numeric" position="bottom" fields="countLengh" title="Length without comments" minimum="0" />
                 <apex:barSeries orientation="horizontal" axis="bottom" xField="countLengh" yField="name"/>
@@ -19,33 +19,67 @@
         </apex:pageBlock>
 
         <apex:pageBlock title="API Ver - CLASS">
-            <apex:chart data="{!apiVersionClassList}" height="300" width="400" background="#F5F5F5">
+            <apex:chart data="{!apiVersionClassList}" height="300" width="350" background="#F5F5F5">
                 <apex:legend position="left"/>
                 <apex:pieSeries labelField="apiVersion" dataField="count" donut="30" />
             </apex:chart>
         </apex:pageBlock>
         
         <apex:pageBlock title="API Ver - TRIGGER">
-            <apex:chart data="{!apiVersionTriggerList}" height="300" width="400" background="#F5F5F5">
+            <apex:chart data="{!apiVersionTriggerList}" height="300" width="350" background="#F5F5F5">
                 <apex:legend position="left"/>
                 <apex:pieSeries labelField="apiVersion" dataField="count" donut="30" />
             </apex:chart>
         </apex:pageBlock>
         
         <apex:pageBlock title="API Ver - PAGE">
-            <apex:chart data="{!apiVersionPageList}" height="300" width="400" background="#F5F5F5">
+            <apex:chart data="{!apiVersionPageList}" height="300" width="350" background="#F5F5F5">
                 <apex:legend position="left"/>
                 <apex:pieSeries labelField="apiVersion" dataField="count" donut="30" />
             </apex:chart>
         </apex:pageBlock>
         
         <apex:pageBlock title="API Ver - COMPONENT">
-            <apex:chart data="{!apiVersionComponentList}" height="300" width="400" background="#F5F5F5">
+            <apex:chart data="{!apiVersionComponentList}" height="300" width="350" background="#F5F5F5">
                 <apex:legend position="left"/>
                 <apex:pieSeries labelField="apiVersion" dataField="count" donut="30"/>
             </apex:chart>
         </apex:pageBlock>
+        
+    </apex:panelGrid>
+    
+    <apex:panelGrid columns="1">
+        
+        <apex:pageBlock title="NUMBER OF CREATED COMPONENT">
+            <apex:chart data="{!createdComponentList}" height="300" width="700">
+                <apex:legend position="left" />
+                <apex:axis type="Numeric" position="left" title="Count" grid="true" 
+                    fields="apexCount,triggerCount,pageCount,componentCount" minimum="0" maximum="50" dashSize="2">
+                    <apex:chartLabel />
+                </apex:axis>
+                <apex:axis type="Category" position="bottom" fields="targetDate" title="Date">
+                    <apex:chartLabel rotate="315"/>
+                </apex:axis>
+                <apex:barSeries orientation="vertical" axis="left" 
+                    xField="targetDate" yField="apexCount,triggerCount,pageCount,componentCount" stacked="true"/>
+            </apex:chart>
+        </apex:pageBlock>
 
+        <apex:pageBlock title="NUMBER OF MODIFIED COMPONENT">
+            <apex:chart data="{!modifiedComponentList}" height="300" width="700">
+                <apex:legend position="left" />
+                <apex:axis type="Numeric" position="left" title="Count" grid="true" 
+                    fields="apexCount,triggerCount,pageCount,componentCount" minimum="0" maximum="50" dashSize="2">
+                    <apex:chartLabel />
+                </apex:axis>
+                <apex:axis type="Category" position="bottom" fields="targetDate" title="Date">
+                    <apex:chartLabel rotate="315"/>
+                </apex:axis>
+                <apex:barSeries orientation="vertical" axis="left" 
+                    xField="targetDate" yField="apexCount,triggerCount,pageCount,componentCount" stacked="true"/>
+            </apex:chart>
+        </apex:pageBlock>
+        
     </apex:panelGrid>
     
 </apex:page>
