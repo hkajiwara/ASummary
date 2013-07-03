@@ -19,14 +19,16 @@ public with sharing class ASummaryController {
         /**
          * Graph data
          */
-        public List<CountLenghClass> countDataList {get; set;}
-        public List<CountLenghClass> lengthDataList {get; set;}
+        public List<CountLengthClass> countDataList {get; set;}
+        public List<CountLengthClass> lengthDataList {get; set;}
         public List<ApiVersionClass> apiVersionClassList {get; set;}
         public List<ApiVersionClass> apiVersionTriggerList {get; set;}
         public List<ApiVersionClass> apiVersionPageList {get; set;}
         public List<ApiVersionClass> apiVersionComponentList {get; set;}
         public List<CreatedModifiedDateClass> createdComponentList {get; set;}
         public List<CreatedModifiedDateClass> modifiedComponentList {get; set;}
+        public Integer maxCreatedNumber {get; set;}
+        public Integer maxModifiedNumber {get; set;}
         
         
         /**
@@ -65,36 +67,39 @@ public with sharing class ASummaryController {
                 }
         }
         
-        /**
-         * Set the length of class and trigger
-         */
-        private void setLengthData() {
-                lengthDataList = new List<CountLenghClass>();
-                
-                Integer totalLength = 0;
-                for (ApexClass target : classList) {
-                        totalLength += target.LengthWithoutComments;
-                }
-                lengthDataList.add(new CountLenghClass('Apex Class', totalLength));
-                
-                totalLength = 0;
-                for (ApexTrigger target : triggerList) {
-                        totalLength += target.LengthWithoutComments;
-                }
-                lengthDataList.add(new CountLenghClass('Apex Trigger', totalLength));
-        }
         
         /**
          * Set the count of each component
          */
         private void setCountData() {
-                countDataList = new List<CountLenghClass>();
+                countDataList = new List<CountLengthClass>();
                 
-                countDataList.add(new CountLenghClass('Class', classList.size()));
-                countDataList.add(new CountLenghClass('Trigger', triggerList.size()));
-                countDataList.add(new CountLenghClass('Page', pageList.size()));
-                countDataList.add(new CountLenghClass('Component', componentList.size()));
+                countDataList.add(new CountLengthClass('Class', classList.size()));
+                countDataList.add(new CountLengthClass('Trigger', triggerList.size()));
+                countDataList.add(new CountLengthClass('Page', pageList.size()));
+                countDataList.add(new CountLengthClass('Component', componentList.size()));
         }
+        
+        
+        /**
+         * Set the length of class and trigger
+         */
+        private void setLengthData() {
+                lengthDataList = new List<CountLengthClass>();
+                
+                Integer totalLength = 0;
+                for (ApexClass target : classList) {
+                        totalLength += target.LengthWithoutComments;
+                }
+                lengthDataList.add(new CountLengthClass('Apex Class', totalLength));
+                
+                totalLength = 0;
+                for (ApexTrigger target : triggerList) {
+                        totalLength += target.LengthWithoutComments;
+                }
+                lengthDataList.add(new CountLengthClass('Apex Trigger', totalLength));
+        }
+
         
         /**
          * Set the API version of each component
@@ -179,6 +184,8 @@ public with sharing class ASummaryController {
         public void countDateOrder() {
                 createdComponentList = new List<CreatedModifiedDateClass>();
                 modifiedComponentList = new List<CreatedModifiedDateClass>();
+                maxCreatedNumber = 0;
+                maxModifiedNumber = 0;
                 
                 Date todayDate = Date.newInstance(Date.today().year(), Date.today().month(), 1);
                 Date targetDate = Date.newInstance(Date.today().year(), Date.today().month() + 1, 1);
@@ -258,7 +265,14 @@ public with sharing class ASummaryController {
                 Integer index = createdComponent.size();
                 for (Integer i = 1 ; i <= index; i++) {
                         createdComponentList.add(createdComponent[index - i]);
+                        if (createdComponent[index - i].getAllComponentCount() > maxCreatedNumber) {
+                                maxCreatedNumber = createdComponent[index - i].getAllComponentCount();
+                        }
+                        
                         modifiedComponentList.add(modifiedComponent[index - i]);
+                        if (modifiedComponent[index - i].getAllComponentCount() > maxModifiedNumber) {
+                                maxModifiedNumber = modifiedComponent[index - i].getAllComponentCount();
+                        }
                 }
         }
         
@@ -266,12 +280,12 @@ public with sharing class ASummaryController {
         /**
          * Count and length class
          */
-        private class CountLenghClass {
+        private class CountLengthClass {
                 private String name;
-                private Integer countLengh;
-                private CountLenghClass(String name, Integer countLengh) {
+                private Integer countLength;
+                private CountLengthClass(String name, Integer countLength) {
                         this.name = name;
-                        this.countLengh = countLengh;
+                        this.countLength = countLength;
                 }
         }
         
@@ -316,6 +330,10 @@ public with sharing class ASummaryController {
                                 this.componentCount++;
                         } else {
                         }
+                }
+                
+                public Integer getAllComponentCount() {
+                        return (this.apexCount + this.triggerCount + this.pageCount + this.componentCount);
                 }
         }
 }

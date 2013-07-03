@@ -3,6 +3,7 @@
     <types>
         <members>ASummaryConfig</members>
         <members>ASummaryController</members>
+        <members>ASummaryController_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>

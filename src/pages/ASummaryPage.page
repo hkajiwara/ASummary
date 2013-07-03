@@ -5,16 +5,16 @@
         <apex:pageBlock title="NUMBER">
             <apex:chart data="{!countDataList}" height="200" width="350">
                 <apex:axis type="Category" position="left" fields="name" title="Component"/>
-                <apex:axis type="Numeric" position="bottom" fields="countLengh" title="# of components" minimum="0" />
-                <apex:barSeries orientation="horizontal" axis="bottom" xField="countLengh" yField="name"/>
+                <apex:axis type="Numeric" position="bottom" fields="countLength" title="# of components" minimum="0" />
+                <apex:barSeries orientation="horizontal" axis="bottom" xField="countLength" yField="name"/>
             </apex:chart>
         </apex:pageBlock>
 
         <apex:pageBlock title="LENGTH">
             <apex:chart data="{!lengthDataList}" height="200" width="350">
                 <apex:axis type="Category" position="left" fields="name" title="Component"/>
-                <apex:axis type="Numeric" position="bottom" fields="countLengh" title="Length without comments" minimum="0" />
-                <apex:barSeries orientation="horizontal" axis="bottom" xField="countLengh" yField="name"/>
+                <apex:axis type="Numeric" position="bottom" fields="countLength" title="Length without comments" minimum="0" />
+                <apex:barSeries orientation="horizontal" axis="bottom" xField="countLength" yField="name"/>
             </apex:chart>
         </apex:pageBlock>
 
@@ -54,7 +54,7 @@
             <apex:chart data="{!createdComponentList}" height="300" width="700">
                 <apex:legend position="left" />
                 <apex:axis type="Numeric" position="left" title="Count" grid="true" 
-                    fields="apexCount,triggerCount,pageCount,componentCount" minimum="0" maximum="50" dashSize="2">
+                    fields="apexCount,triggerCount,pageCount,componentCount" minimum="0" maximum="{!maxCreatedNumber+5}" dashSize="2">
                     <apex:chartLabel />
                 </apex:axis>
                 <apex:axis type="Category" position="bottom" fields="targetDate" title="Date">
@@ -69,7 +69,7 @@
             <apex:chart data="{!modifiedComponentList}" height="300" width="700">
                 <apex:legend position="left" />
                 <apex:axis type="Numeric" position="left" title="Count" grid="true" 
-                    fields="apexCount,triggerCount,pageCount,componentCount" minimum="0" maximum="50" dashSize="2">
+                    fields="apexCount,triggerCount,pageCount,componentCount" minimum="0" maximum="{!maxModifiedNumber+5}" dashSize="2">
                     <apex:chartLabel />
                 </apex:axis>
                 <apex:axis type="Category" position="bottom" fields="targetDate" title="Date">
