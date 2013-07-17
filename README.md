@@ -8,7 +8,7 @@ _Summary report for Apex class, trigger, page and component_
 * Number of all created components
 * Number of all modified components
 
-## Screenshot
+## Screenshots
 
 ![my image](img/screenshot1.png)
 ![my image](img/screenshot2.png)
